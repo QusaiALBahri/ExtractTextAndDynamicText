@@ -1,29 +1,31 @@
-'''
-'''
 from selenium import webdriver
-import time  
-#et option to make browser easy
-def get_driver():
-  options = webdriver.ChromeOptions()
-  options.add_argument("disable-infobars")
-  options.add_argument("start-maximized")
-  options.add_argument("disbale-dev-shm-usage")
-  options.add_argument("no-sandbox")
-  options.add_experimental_option("excludeSwitches", ["enable-automation"])
-  options.add_argument("disbale-blink-features=AutomationControlled")
-  driver = webdriver.Chrome(options=options)
-  driver.get("http://automated.pythonanywhere.com")
-  return driver
-\#if we wanna get just the number we can use this
-def clean_text(text):
-  """Extract only the temperature from text"""
-  output = float(text.split(": ")[1])
-  return output
-  
-def main():
-  driver = get_driver()
-  time.sleep(2)
-  element = driver.find_element(by="xpath", value="/html/body/div[1]/div/h1[2]")
-  return clean_text(element.text)
+import time
 
-print(main(  ))
+# Get user input for XPath and Website URL
+xpath_value = input("Input the XPath For The Text You Wanna Scrap: ") #/html/body/div[1]/div/h1[2]
+website_url = input("Input the Website For The Text You Wanna Scrap: ") #http://automated.pythonanywhere.com
+
+def get_driver(website):
+    options = webdriver.ChromeOptions()
+    options.add_argument("disable-infobars")
+    options.add_argument("start-maximized")
+    options.add_argument("disable-dev-shm-usage")
+    options.add_argument("no-sandbox")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_argument("disable-blink-features=AutomationControlled")
+    driver = webdriver.Chrome(options=options)
+    driver.get(website)
+    return driver
+
+def clean_text(text):
+    """Extract only the temperature from text."""
+    output = float(text.split(": ")[1])
+    return output
+
+def main():
+    driver = get_driver(website_url)
+    time.sleep(2)
+    element = driver.find_element(by="xpath", value=xpath_value)
+    return clean_text(element.text)
+
+print(main())
